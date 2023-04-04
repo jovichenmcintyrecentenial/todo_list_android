@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "597116949889",
+    "project_id": "android-mini-project-9a9d6",
+    "storage_bucket": "android-mini-project-9a9d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597116949889:android:6cdb61980f28cc15814480",
+        "android_client_info": {
+          "package_name": "com.centennial.team_15_mapd_721_todo_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597116949889-gn8mn2sqfopg7e3f2k1ib9ap8foch0mt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEt___wfLCY-PNRCddw77-8kL6omMAeo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597116949889-gn8mn2sqfopg7e3f2k1ib9ap8foch0mt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
