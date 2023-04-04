@@ -23,6 +23,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
 
     lateinit var loginViewModel: LoginViewModel
+    lateinit var loginObserver:Observer<UserModel?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider(this).get(modelClass = LoginViewModel::class.java)
 
-        val loginObserver = Observer<UserModel?> { userModel ->
+        loginObserver = Observer<UserModel?> { userModel ->
 
             if(userModel != null) {
                 val sharedPreference =  getSharedPreferences("STORE",Context.MODE_PRIVATE)
@@ -53,8 +54,15 @@ class LoginActivity : AppCompatActivity() {
         }
 
         loginViewModel.liveUserData.observe(this, loginObserver)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        loginViewModel.liveUserData.removeObserver(loginObserver)
 
     }
+
+
 
     fun onCreateAccountClicked(view: View) {
 
@@ -78,6 +86,8 @@ class LoginActivity : AppCompatActivity() {
             Utils.showMessage(this,e.message.toString())
         }
     }
+
+
 
     private fun isDataValid(): Boolean {
 
