@@ -1,6 +1,7 @@
 
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import com.centennial.team_15_mapd_721_todo_app.models.Database
 import com.centennial.team_15_mapd_721_todo_app.models.UserModel
 import kotlinx.coroutines.tasks.await
@@ -10,6 +11,10 @@ class UserRepository {
     //defining database and live data object as companion objects
     companion object {
         private const val collection = "users"
+
+        val user: MutableLiveData<UserModel?> by lazy {
+            MutableLiveData<UserModel?>()
+        }
 
         //insert user data
         suspend fun insertData(context: Context, customer:UserModel)  {
@@ -40,8 +45,9 @@ class UserRepository {
                 .whereEqualTo("email",username)
                 .get().await()
             if(!quertSnapshot.isEmpty){
-                 var customer = quertSnapshot.toObjects(UserModel::class.java)[0]
-                return customer
+                 var loginUser = quertSnapshot.toObjects(UserModel::class.java)[0]
+                 user.postValue(loginUser)
+                return loginUser
             }
 
             return null
