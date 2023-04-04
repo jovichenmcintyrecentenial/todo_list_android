@@ -1,4 +1,4 @@
-package com.centennial.team_15_mapd_721_todo_app.ui
+package com.centennial.team_15_mapd_721_todo_app.ui.main
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar

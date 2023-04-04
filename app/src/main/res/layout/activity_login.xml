@@ -1,0 +1,79 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:gravity="top"
+
+        tools:context=".ui.login.LoginActivity">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_gravity="top"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:scaleType="centerCrop"
+
+            android:src="@drawable/login_image" />
+
+        <LinearLayout
+            android:layout_marginHorizontal="25dp"
+            android:layout_weight="6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:hint="Email"
+                android:layout_marginBottom="10dp"
+                style="@style/text_field_style" />
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:hint="Password"
+                android:layout_marginBottom="5dp"
+                style="@style/text_field_style"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="20dp"
+                android:text="Login" />
+            <TextView
+                android:textAlignment="center"
+                android:id="@+id/textViewCreateAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No account? Create One"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:clickable="true"
+                android:textColorLink="@color/text_secondary"
+                android:onClick="onCreateAccountClicked" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_marginTop="0dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/stick_notes" />
+
+</RelativeLayout>
