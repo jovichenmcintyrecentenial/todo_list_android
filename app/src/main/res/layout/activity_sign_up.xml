@@ -30,10 +30,6 @@
             android:hint="Last Name"
             style="@style/text_field_style" />
 
-        <EditText
-            android:id="@+id/editTextAddress"
-            android:hint="Address"
-            style="@style/text_field_style" />
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -45,6 +41,11 @@
             android:hint="Password"
             style="@style/text_field_style"
             android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/editRePassword"
+            android:hint="Password"
+            style="@style/text_field_style"
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/buttonSignUp"
@@ -52,6 +53,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:text="Sign Up"
+            android:onClick="onSubmit"
             style="@style/main_button_style" />
 
     </LinearLayout>
