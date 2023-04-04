@@ -49,6 +49,7 @@
                 android:id="@+id/buttonLogin"
                 android:layout_marginBottom="20dp"
                 android:text="Login"
+                android:onClick="onLogin"
                 style="@style/main_button_style" />
             <TextView
                 android:textAlignment="center"
