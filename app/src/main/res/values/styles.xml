@@ -5,6 +5,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:paddingLeft">20dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
         <item name="android:background">@drawable/text_field_shape</item>
+    </style>
+
+    <style name="main_button_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
     </style>
 </resources>
