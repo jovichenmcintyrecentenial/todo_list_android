@@ -7,13 +7,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
+import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.notification.MyNotification
+import com.google.gson.Gson
 import java.util.*
 
 class MyAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        AlarmService.notifications!!.showNotification("Title","Message",null)
-        Utils.showMessage(context,"This is a test")
+        val task = Gson().fromJson(intent.getStringExtra("task"),TaskModel::class.java)
+        AlarmService.notifications!!.showNotification("Due Task: "+task.name!!,task.note!!,null)
     }
 }
 
@@ -26,18 +28,19 @@ class AlarmService {
             notifications = MyNotification(context)
         }
 
-        fun setAlarm(context: Context, date: Date, requestCode: Int) {
+        fun setAlarm(context: Context, taskModel: TaskModel) {
                 val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val alarmIntent = Intent(context, MyAlarmReceiver::class.java).apply {
                     action = MyConstants.ALARMID
+                    putExtra("task", Gson().toJson(taskModel)) // Pass the extra data
                 }
-                val pendingIntent = PendingIntent.getBroadcast(context, requestCode, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
+                val pendingIntent = PendingIntent.getBroadcast(context, taskModel.hashCode(), alarmIntent, PendingIntent.FLAG_IMMUTABLE)
 
                 // Set the alarm
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, date.time, pendingIntent)
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, taskModel.dueDate!!.time, pendingIntent)
                 } else {
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, date.time, pendingIntent)
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, taskModel.dueDate!!.time, pendingIntent)
                 }
         }
 

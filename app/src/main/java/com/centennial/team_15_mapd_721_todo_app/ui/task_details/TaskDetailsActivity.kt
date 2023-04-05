@@ -135,8 +135,9 @@ class TaskDetailsActivity : AppCompatActivity() {
                     date,
                     binding.isCompleted.isChecked
                 )
-                AlarmService.setAlarm(this,date!!,taskModel.id.hashCode(),)
                 taskModel.idCreate()
+
+                AlarmService.setAlarm(this,taskModel,)
 
                 //use view model to insert data in database
                 taskViewModel.addTask(this,taskModel)
