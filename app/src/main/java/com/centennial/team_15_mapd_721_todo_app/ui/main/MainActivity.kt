@@ -14,9 +14,11 @@ import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.centennial.team_15_mapd_721_todo_app.R
+import com.centennial.team_15_mapd_721_todo_app.adapters.SwipeToDeleteCallback
 import com.centennial.team_15_mapd_721_todo_app.adapters.TaskAdapter
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var speechRecognizerIntent: Intent
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: TaskAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var mainViewModel: MainViewModel? = null
 
@@ -96,6 +98,8 @@ class MainActivity : AppCompatActivity() {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         }
 
+
+
         mainViewModel?.liveTaskListData?.observe(this, androidx.lifecycle.Observer { listOfTask ->
             if (listOfTask != null) {
                 if (list == null) {
@@ -106,6 +110,16 @@ class MainActivity : AppCompatActivity() {
                         //load new Intent
                         startActivity(newIntent)
                     }
+
+                    val swipeHandler = object : SwipeToDeleteCallback(viewAdapter) {
+                        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                            viewAdapter.deleteItem(viewHolder.adapterPosition)
+                            mainViewModel!!.deleteTask( list!![0])
+                        }
+                    }
+
+                    val itemTouchHelper = ItemTouchHelper(swipeHandler)
+                    itemTouchHelper.attachToRecyclerView(recyclerView)
                 }
 
                 list?.apply {

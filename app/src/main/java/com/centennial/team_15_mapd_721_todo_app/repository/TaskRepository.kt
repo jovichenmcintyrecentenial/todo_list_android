@@ -2,6 +2,7 @@ package com.centennial.team_15_mapd_721_todo_app.repository
 
 import UserRepository
 import android.content.Context
+import android.util.Log
 import com.centennial.team_15_mapd_721_todo_app.models.Database
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.google.firebase.firestore.Query
@@ -43,6 +44,21 @@ class TaskRepository {
                 return tasks
             }
             return null
+        }
+
+        fun deleteItem(taskModel: TaskModel, onComplete: (result: Boolean) -> Unit) {
+
+             Database.getDB()!!.collection(collection)
+                .document(taskModel.id!!)
+                .delete()
+                .addOnSuccessListener {
+                    onComplete(true)
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("DeleteItem", "Error deleting item", exception)
+                    onComplete(false)
+                }
+
         }
 
 

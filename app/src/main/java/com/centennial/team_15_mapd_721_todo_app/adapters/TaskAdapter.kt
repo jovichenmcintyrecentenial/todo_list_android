@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.centennial.team_15_mapd_721_todo_app.R
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
@@ -13,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class TaskAdapter(private val items: List<TaskModel>,private val onItemClicked: (TaskModel) -> Unit) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
+class TaskAdapter(private val items: MutableList<TaskModel>,private val onItemClicked: (TaskModel) -> Unit) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.itemTextView)
@@ -27,6 +28,8 @@ class TaskAdapter(private val items: List<TaskModel>,private val onItemClicked: 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
         return ViewHolder(view)
     }
+
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
@@ -74,5 +77,29 @@ class TaskAdapter(private val items: List<TaskModel>,private val onItemClicked: 
         holder.textView.text = item.name
     }
 
+
     override fun getItemCount(): Int = items.size
+
+    fun deleteItem(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+}
+
+open class SwipeToDeleteCallback(private val adapter: TaskAdapter) :
+    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
+        return false
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        val position = viewHolder.adapterPosition
+        adapter.deleteItem(position)
+    }
 }
