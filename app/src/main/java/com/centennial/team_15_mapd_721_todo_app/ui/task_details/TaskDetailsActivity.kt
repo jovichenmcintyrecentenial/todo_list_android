@@ -152,7 +152,7 @@ class TaskDetailsActivity : AppCompatActivity() {
 
     private fun isDataValid(): Boolean {
         Utils.emptyValidation(binding.editTaskName, "Please enter a task name")
-        Utils.emptyValidation(binding.editTaskDetails, "Please enter a task details")
+//        Utils.emptyValidation(binding.editTaskDetails, "Please enter a task details")
 
         val currentDate = Calendar.getInstance().time
 
