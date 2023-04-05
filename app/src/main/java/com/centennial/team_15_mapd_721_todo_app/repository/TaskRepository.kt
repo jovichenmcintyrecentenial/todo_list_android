@@ -13,16 +13,23 @@ class TaskRepository {
         val collection = "tasks"
 
         //function used to update and insert order data
-        suspend fun insertUpdateData(context: Context, taskModel: TaskModel) {
+        suspend fun insertUpdateData(context: Context, taskModel: TaskModel): Boolean {
             taskModel.idCreate()
-            taskModel.id?.let {
-                Database.getDB()!!
-                    .collection(collection)
-                    .document(it)
-                    .set(taskModel)
-                    .await()
+            return try {
+                taskModel.id?.let {
+                    Database.getDB()!!
+                        .collection(collection)
+                        .document(it)
+                        .set(taskModel)
+                        .await()
+                }
+                return true // Return true if the insert/update was successful
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return false // Return false if an exception occurred
             }
         }
+
         //get all order from customer with specified id
         suspend fun getMyTask(context: Context): List<TaskModel>? {
 

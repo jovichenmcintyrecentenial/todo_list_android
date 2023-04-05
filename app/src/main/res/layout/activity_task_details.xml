@@ -15,9 +15,12 @@
         android:scaleType="centerCrop"
         android:src="@drawable/add_a_task" />
 
-    <LinearLayout
-        android:layout_marginHorizontal="20dp"
+    <ScrollView
         android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+        android:layout_marginHorizontal="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageViewSignUp"
@@ -88,21 +91,30 @@
                 android:onClick="showTimePickerDialog" />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16dp"
+                android:text="Task Completed"/>
 
+            <androidx.appcompat.widget.SwitchCompat
 
+                android:id="@+id/is_completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumbTint="@color/text_secondary"
+                android:layout_marginBottom="10dp"
+                android:trackTint="#FF5722"
+                />
 
-<!--        <EditText-->
-<!--            android:id="@+id/editTextEmail"-->
-<!--            android:hint="Email"-->
-<!--            style="@style/text_field_style" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/editTextPassword"-->
-<!--            android:hint="Password"-->
-<!--            style="@style/text_field_style"-->
-<!--            android:inputType="textPassword" />-->
-
+        </LinearLayout>
 
         <Button
             android:id="@+id/buttonSignUp"
@@ -114,4 +126,5 @@
             style="@style/main_button_style" />
 
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>

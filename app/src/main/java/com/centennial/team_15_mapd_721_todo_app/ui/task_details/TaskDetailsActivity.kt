@@ -1,23 +1,25 @@
 package com.centennial.team_15_mapd_721_todo_app.ui.task_details
 
+import UserInputException
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import com.centennial.team_15_mapd_721_todo_app.R
-import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityLoginBinding
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityTaskDetailsBinding
-import com.google.type.DateTime
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 
 class TaskDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTaskDetailsBinding
     private var date:Date? = null
     private val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
     private val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    private lateinit var taskViewModel: TaskViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +35,18 @@ class TaskDetailsActivity : AppCompatActivity() {
                 binding.dateTimelayout.visibility = View.GONE
             }
         }
+
+        taskViewModel = ViewModelProvider(this).get(modelClass = TaskViewModel::class.java)
+
+        val loginObserver = Observer<Boolean?> { boolean ->
+            if (boolean == true) {
+                finish()
+            } else {
+                Utils.showMessage(this,"Unable to add task")
+            }
+        }
+
+        taskViewModel.liveDataTaskCompleted.observe(this, loginObserver)
     }
 
     fun setCurrentDateAndTime(){
@@ -99,4 +113,39 @@ class TaskDetailsActivity : AppCompatActivity() {
         )
 
         timePickerDialog.show()
-    }}
+    }
+
+    fun onSubmit(view: View) {
+        try{
+            if(isDataValid()){
+
+                //store values in string varibles
+                val taskName = binding.editTaskName.text.toString()
+                val taskDetails = binding.editTaskDetails.text.toString()
+
+                //create new task model
+                val taskModel = TaskModel(
+                    taskName,
+                    taskDetails,
+                )
+
+                taskModel.idCreate()
+
+                //use view model to insert data in database
+                taskViewModel.addTask(this,taskModel)
+            }
+        }
+        //catch  and display user input exception
+        catch (e: UserInputException) {
+            //display exception message
+            Utils.showMessage(this, e.message.toString())
+        }
+    }
+
+    private fun isDataValid(): Boolean {
+        Utils.emptyValidation(binding.editTaskName, "Please enter a task name")
+        Utils.emptyValidation(binding.editTaskDetails, "Please enter a task details")
+
+        return true
+    }
+}

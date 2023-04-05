@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.centennial.team_15_mapd_721_todo_app.R
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityLoginBinding
 import com.centennial.team_15_mapd_721_todo_app.models.Database
 import com.centennial.team_15_mapd_721_todo_app.models.UserModel

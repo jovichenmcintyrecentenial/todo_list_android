@@ -5,11 +5,12 @@ import java.util.*
 data class TaskModel(
 
     var name: String? = null,
-    var isCompleted: String? = null,
-    var dueDate: String? = null,
     var note: String? = null,
-    var userId: String? = null,
-    var id:String? = null
+    var dueDate: Date? = null,
+    var isCompleted: String? = null,
+    var id:String? = null,
+    var userId: String? = null
+
 ){
     //defining a primary key field Id
     fun idCreate(){
