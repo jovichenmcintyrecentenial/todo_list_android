@@ -3,6 +3,7 @@ package com.centennial.team_15_mapd_721_todo_app.ui.task_details
 import UserInputException
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,7 +13,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
+import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
+import com.centennial.team_15_mapd_721_todo_app.service.MyAlarmReceiver
 
 class TaskDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTaskDetailsBinding
@@ -47,6 +51,7 @@ class TaskDetailsActivity : AppCompatActivity() {
         }
 
         taskViewModel.liveDataTaskCompleted.observe(this, loginObserver)
+
     }
 
     fun setCurrentDateAndTime(){
@@ -127,8 +132,10 @@ class TaskDetailsActivity : AppCompatActivity() {
                 val taskModel = TaskModel(
                     taskName,
                     taskDetails,
+                    date,
+                    binding.isCompleted.isChecked
                 )
-
+                AlarmService.setAlarm(this,date!!,taskModel.id.hashCode(),)
                 taskModel.idCreate()
 
                 //use view model to insert data in database
@@ -146,6 +153,13 @@ class TaskDetailsActivity : AppCompatActivity() {
         Utils.emptyValidation(binding.editTaskName, "Please enter a task name")
         Utils.emptyValidation(binding.editTaskDetails, "Please enter a task details")
 
+        val currentDate = Calendar.getInstance().time
+
+        if(binding.dateTimelayout.visibility == View.VISIBLE) {
+            if (date != null && date!!.before(currentDate)) {
+                throw UserInputException("Please enter date that hasn't already passed")
+            }
+        }
         return true
     }
 }

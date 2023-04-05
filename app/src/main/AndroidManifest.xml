@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -50,6 +51,11 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <receiver android:name=".service.MyAlarmReceiver" android:enabled="true" android:exported="false">
+            <intent-filter>
+                <action android:name="com.centennial.team_15_mapd_721_todo_app.ALARM_TRIGGERED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

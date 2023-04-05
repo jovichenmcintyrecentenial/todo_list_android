@@ -7,7 +7,7 @@ data class TaskModel(
     var name: String? = null,
     var note: String? = null,
     var dueDate: Date? = null,
-    var isCompleted: String? = null,
+    var isCompleted: Boolean? = null,
     var id:String? = null,
     var userId: String? = null
 
