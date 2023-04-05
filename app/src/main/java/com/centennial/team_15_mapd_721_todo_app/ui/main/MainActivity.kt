@@ -13,12 +13,18 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.centennial.team_15_mapd_721_todo_app.R
+import com.centennial.team_15_mapd_721_todo_app.adapters.TaskAdapter
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
+import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
-import com.centennial.team_15_mapd_721_todo_app.ui.signup.SignUpActivity
 import com.centennial.team_15_mapd_721_todo_app.ui.task_details.TaskDetailsActivity
+import java.text.SimpleDateFormat
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +32,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var speechRecognizerIntent: Intent
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
+    private var mainViewModel: MainViewModel? = null
+
+    var list:MutableList<TaskModel>? = null
+
+    override fun onResume() {
+        super.onResume()
+        if(mainViewModel!=null){
+           mainViewModel!!.getTasks(this)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,14 +54,34 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        binding.fab.setOnClickListener { view ->
-//            val intent = Intent(this, TaskDetailsActivity::class.java)
-//            startActivity(intent)
+        //connect to view model
+        mainViewModel = ViewModelProvider(this).get(modelClass = MainViewModel::class.java)
 
-            startListening()
+        val calendar = Calendar.getInstance()
+        val dateFormatDate = SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault())
+
+        val dateString = dateFormatDate.format(calendar.time)
+        supportActionBar?.title = dateString
+
+
+
+        binding.fab.setOnClickListener { view ->
+            val intent = Intent(this, TaskDetailsActivity::class.java)
+            startActivity(intent)
+
+//            startListening()
         }
 
         AlarmService.initialize(this)
+
+        viewManager = LinearLayoutManager(this)
+//        viewAdapter = TaskAdapter(emptyList())
+        recyclerView = binding.recyclerView
+//        recyclerView.apply {
+//            setHasFixedSize(true)
+//            layoutManager = viewManager
+//            adapter = viewAdapter
+//        }
 
         // Initialize the SpeechRecognizer
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
@@ -55,6 +94,33 @@ class MainActivity : AppCompatActivity() {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         }
+
+        mainViewModel?.liveTaskListData?.observe(this, androidx.lifecycle.Observer { listOfTask ->
+            if (listOfTask != null) {
+                if (list == null) {
+                    list = mutableListOf()
+                    viewAdapter = TaskAdapter(list!!)
+                }
+
+                list?.apply {
+                    clear()
+                    addAll(listOfTask)
+                }
+
+                if (recyclerView.adapter == null) {
+                    recyclerView.apply {
+                        setHasFixedSize(true)
+                        layoutManager = viewManager
+                        adapter = viewAdapter
+                    }
+                } else {
+                    viewAdapter.notifyDataSetChanged()
+                }
+            }
+        })
+
+        mainViewModel!!.getTasks(this)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

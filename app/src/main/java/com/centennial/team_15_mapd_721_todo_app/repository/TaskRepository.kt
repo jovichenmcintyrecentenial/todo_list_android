@@ -4,6 +4,7 @@ import UserRepository
 import android.content.Context
 import com.centennial.team_15_mapd_721_todo_app.models.Database
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 class TaskRepository {
@@ -35,6 +36,7 @@ class TaskRepository {
 
             var quertSnapshot = Database.getDB()!!.collection(collection)
                 .whereEqualTo("userId", UserRepository.user.value!!.id)
+//                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .get().await()
             if(!quertSnapshot.isEmpty){
                 val tasks = quertSnapshot.toObjects(TaskModel::class.java)
