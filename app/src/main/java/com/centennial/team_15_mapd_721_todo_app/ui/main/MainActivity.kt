@@ -1,5 +1,6 @@
 package com.centennial.team_15_mapd_721_todo_app.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import com.centennial.team_15_mapd_721_todo_app.R
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
+import com.centennial.team_15_mapd_721_todo_app.ui.signup.SignUpActivity
+import com.centennial.team_15_mapd_721_todo_app.ui.task_details.TaskDetailsActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,8 +24,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
+
+            val intent = Intent(this, TaskDetailsActivity::class.java)
+            startActivity(intent)
         }
     }
 
