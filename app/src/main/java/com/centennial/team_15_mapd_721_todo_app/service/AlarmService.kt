@@ -7,10 +7,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
+import com.centennial.team_15_mapd_721_todo_app.notification.MyNotification
 import java.util.*
 
 class MyAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        AlarmService.notifications!!.showNotification("Title","Message",null)
         Utils.showMessage(context,"This is a test")
     }
 }
@@ -18,14 +20,10 @@ class MyAlarmReceiver : BroadcastReceiver() {
 class AlarmService {
 
     companion object {
+        var notifications: MyNotification? = null
 
-        private val intent:Intent? = null
-
-        private fun getIntent(context: Context): Intent {
-            val intent = Intent(context, MyAlarmReceiver::class.java).apply {
-                action = MyConstants.ALARMID
-            }
-            return intent
+        fun initialize(context:Context){
+            notifications = MyNotification(context)
         }
 
         fun setAlarm(context: Context, date: Date, requestCode: Int) {
@@ -45,9 +43,14 @@ class AlarmService {
 
 
         fun cancelAlarm(context: Context, requestCode: Int, intent: Intent) {
+
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            val pendingIntent = PendingIntent.getBroadcast(context, requestCode, getIntent(context), 0)
+            val alarmIntent = Intent(context, MyAlarmReceiver::class.java).apply {
+                action = MyConstants.ALARMID
+            }
+
+            val pendingIntent = PendingIntent.getBroadcast(context, requestCode, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
             alarmManager.cancel(pendingIntent)
             pendingIntent.cancel()
         }

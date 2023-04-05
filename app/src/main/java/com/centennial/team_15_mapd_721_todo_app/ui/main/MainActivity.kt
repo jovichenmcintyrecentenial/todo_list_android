@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.centennial.team_15_mapd_721_todo_app.R
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
+import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
 import com.centennial.team_15_mapd_721_todo_app.ui.signup.SignUpActivity
 import com.centennial.team_15_mapd_721_todo_app.ui.task_details.TaskDetailsActivity
 
@@ -24,12 +25,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-
             val intent = Intent(this, TaskDetailsActivity::class.java)
             startActivity(intent)
         }
+
+        AlarmService.initialize(this)
+//        AlarmService.notifications!!.showNotification("Titsle","Message",null)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

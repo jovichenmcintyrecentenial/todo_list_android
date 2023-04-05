@@ -2,18 +2,23 @@ package com.centennial.team_15_mapd_721_todo_app.ui.login
 
 import LoginViewModel
 import UserInputException
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityLoginBinding
 import com.centennial.team_15_mapd_721_todo_app.models.Database
 import com.centennial.team_15_mapd_721_todo_app.models.UserModel
 import com.centennial.team_15_mapd_721_todo_app.ui.signup.SignUpActivity
 import androidx.lifecycle.Observer
+import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
 import com.centennial.team_15_mapd_721_todo_app.ui.main.MainActivity
 
 
@@ -53,6 +58,31 @@ class LoginActivity : AppCompatActivity() {
         }
 
         loginViewModel.liveUserData.observe(this, loginObserver)
+
+        val requestPermissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+
+            }
+
+        when {
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // You can use the API that requires the permission.
+            }
+            shouldShowRequestPermissionRationale("Require permission inorder to get notificaion from chat bot") -> {
+
+            }
+            else -> {
+
+                requestPermissionLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
     }
 
     override fun onDestroy() {
