@@ -22,6 +22,7 @@ import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
 import com.centennial.team_15_mapd_721_todo_app.ui.task_details.TaskDetailsActivity
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -99,7 +100,12 @@ class MainActivity : AppCompatActivity() {
             if (listOfTask != null) {
                 if (list == null) {
                     list = mutableListOf()
-                    viewAdapter = TaskAdapter(list!!)
+                    viewAdapter = TaskAdapter(list!!){ task ->
+                        var newIntent = Intent(this, TaskDetailsActivity::class.java)
+                        newIntent.putExtra("task", Gson().toJson(task))
+                        //load new Intent
+                        startActivity(newIntent)
+                    }
                 }
 
                 list?.apply {

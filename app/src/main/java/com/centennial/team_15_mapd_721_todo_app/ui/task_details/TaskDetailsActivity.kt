@@ -17,6 +17,7 @@ import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
 import com.centennial.team_15_mapd_721_todo_app.service.MyAlarmReceiver
+import com.google.gson.Gson
 
 class TaskDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTaskDetailsBinding
@@ -24,6 +25,7 @@ class TaskDetailsActivity : AppCompatActivity() {
     private val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
     private val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
     private lateinit var taskViewModel: TaskViewModel
+    private var taskModel: TaskModel? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +42,8 @@ class TaskDetailsActivity : AppCompatActivity() {
             }
         }
 
+
+
         taskViewModel = ViewModelProvider(this).get(modelClass = TaskViewModel::class.java)
 
         val loginObserver = Observer<Boolean?> { boolean ->
@@ -52,6 +56,19 @@ class TaskDetailsActivity : AppCompatActivity() {
 
         taskViewModel.liveDataTaskCompleted.observe(this, loginObserver)
 
+        if(intent.hasExtra("task")){
+            taskModel = Gson().fromJson(intent.getStringExtra("task"),TaskModel::class.java)
+        }
+        updateData()
+    }
+
+    fun updateData(){
+        if(taskModel == null) return
+        binding.editTaskName.setText(taskModel!!.name)
+        binding.editTaskDetails.setText(taskModel!!.note)
+        binding.isCompleted.isChecked = taskModel!!.isCompleted!!
+        binding.hasDueDateSwitch.isChecked = taskModel!!.dueDate != null
+        binding.actionButton.text = "Update Task"
     }
 
     fun setCurrentDateAndTime(){
@@ -128,19 +145,28 @@ class TaskDetailsActivity : AppCompatActivity() {
                 val taskName = binding.editTaskName.text.toString()
                 val taskDetails = binding.editTaskDetails.text.toString()
 
-                //create new task model
-                val taskModel = TaskModel(
-                    taskName,
-                    taskDetails,
-                    date,
-                    binding.isCompleted.isChecked
-                )
-                taskModel.idCreate()
+                if(taskModel == null) {
+                    //create new task model
+                    taskModel = TaskModel(
+                        taskName,
+                        taskDetails,
+                        if (binding.hasDueDateSwitch.isChecked) date else null,
+                        binding.isCompleted.isChecked
+                    )
+                    taskModel!!.idCreate()
+                }
+                else{
+                    taskModel!!.name = taskName
+                    taskModel!!.note = taskDetails
+                    taskModel!!.dueDate = if (binding.hasDueDateSwitch.isChecked) date else null
+                    taskModel!!.isCompleted = binding.isCompleted.isChecked
+                }
 
-                AlarmService.setAlarm(this,taskModel,)
-
+                if(taskModel!!.dueDate != null) {
+                    AlarmService.setAlarm(this, taskModel!!,)
+                }
                 //use view model to insert data in database
-                taskViewModel.addTask(this,taskModel)
+                taskViewModel.addTask(this,taskModel!!)
             }
         }
         //catch  and display user input exception

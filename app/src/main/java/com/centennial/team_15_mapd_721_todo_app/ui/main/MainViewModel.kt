@@ -18,7 +18,11 @@ class MainViewModel : ViewModel() {
     fun getTasks(context: Context){
 
         CoroutineScope(Dispatchers.IO).launch {
-            liveTaskListData.postValue( TaskRepository.getMyTask(context))
+
+            val data = TaskRepository.getMyTask(context)
+            if(data != null) {
+                liveTaskListData.postValue(data)
+            }
         }
     }
 }

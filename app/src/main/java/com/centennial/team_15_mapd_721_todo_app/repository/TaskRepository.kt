@@ -36,7 +36,7 @@ class TaskRepository {
 
             var quertSnapshot = Database.getDB()!!.collection(collection)
                 .whereEqualTo("userId", UserRepository.user.value!!.id)
-//                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .get().await()
             if(!quertSnapshot.isEmpty){
                 val tasks = quertSnapshot.toObjects(TaskModel::class.java)
