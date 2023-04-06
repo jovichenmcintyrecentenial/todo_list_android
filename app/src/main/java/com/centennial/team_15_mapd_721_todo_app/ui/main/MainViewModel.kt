@@ -40,14 +40,12 @@ class MainViewModel : ViewModel() {
             }
         }
     }
-    fun makeAsCompleted(context: Context){
+    fun makeAsCompleted(context:Context, taskModel:TaskModel){
 
         CoroutineScope(Dispatchers.IO).launch {
+            taskModel.isCompleted = !taskModel.isCompleted!!
+            TaskRepository.insertUpdateData(context,taskModel)
 
-            val data = TaskRepository.getMyTask(context)
-            if(data != null) {
-                liveTaskListData.postValue(data)
-            }
         }
     }
 }

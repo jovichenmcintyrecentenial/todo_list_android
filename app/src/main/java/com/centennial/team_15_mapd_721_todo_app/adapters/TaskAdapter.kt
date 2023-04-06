@@ -85,6 +85,10 @@ class TaskAdapter(private val items: MutableList<TaskModel>,private val onItemCl
         notifyItemRemoved(position)
     }
 
+    fun completeItem(position: Int) {
+        notifyDataSetChanged()
+    }
+
 }
 
 open class SwipeToDeleteCallback(private val adapter: TaskAdapter) :

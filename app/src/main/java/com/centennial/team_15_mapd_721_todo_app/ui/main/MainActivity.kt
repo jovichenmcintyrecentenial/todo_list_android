@@ -113,8 +113,23 @@ class MainActivity : AppCompatActivity() {
 
                     val swipeHandler = object : SwipeToDeleteCallback(viewAdapter) {
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                            viewAdapter.deleteItem(viewHolder.adapterPosition)
-                            mainViewModel!!.deleteTask( list!![0])
+                            list!![viewHolder.adapterPosition]
+
+                            when (direction) {
+                                ItemTouchHelper.LEFT -> {
+                                    // Handle swipe to left
+                                    mainViewModel!!.deleteTask( list!![viewHolder.adapterPosition])
+                                    viewAdapter.deleteItem(viewHolder.adapterPosition)
+                                }
+                                ItemTouchHelper.RIGHT -> {
+                                    // Handle swipe to right
+                                    mainViewModel!!.makeAsCompleted(applicationContext, list!![viewHolder.adapterPosition])
+                                    viewAdapter.completeItem(viewHolder.adapterPosition)
+
+                                }
+                            }
+
+
                         }
                     }
 
