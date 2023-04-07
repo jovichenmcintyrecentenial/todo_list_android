@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +23,9 @@ import com.centennial.team_15_mapd_721_todo_app.adapters.SwipeToDeleteCallback
 import com.centennial.team_15_mapd_721_todo_app.adapters.TaskAdapter
 import com.centennial.team_15_mapd_721_todo_app.api.ApiClient
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
+import com.centennial.team_15_mapd_721_todo_app.models.SpeechInterpret
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
+import com.centennial.team_15_mapd_721_todo_app.models.UserModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
 import com.centennial.team_15_mapd_721_todo_app.ui.task_details.TaskDetailsActivity
 import com.google.gson.Gson
@@ -88,8 +91,6 @@ class MainActivity : AppCompatActivity() {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         }
 
-
-
         mainViewModel?.liveTaskListData?.observe(this, androidx.lifecycle.Observer { listOfTask ->
             if (listOfTask != null) {
                 if (list == null) {
@@ -144,6 +145,28 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        mainViewModel?.liveSpeechInterpret?.observe(this, androidx.lifecycle.Observer { speechInterpret ->
+            val intent = Intent(this, TaskDetailsActivity::class.java)
+            val task = TaskModel()
+            task.isCompleted = false
+            task.note = speechInterpret!!.taskDetails
+            task.name = speechInterpret!!.taskDeriveTitle
+
+            if(speechInterpret.taskIsTimeSensitive!!) {
+                val dateFormat = if (speechInterpret.dueDateTime!!.length == 10) {
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                } else {
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                }
+                val date = dateFormat.parse(speechInterpret.dueDateTime!!)
+                task.dueDate = date
+            }
+
+            task.idCreate()
+            intent.putExtra("task", Gson().toJson(task))
+            startActivity(intent)
+        })
+
         mainViewModel!!.getTasks(this)
         ApiClient
     }
@@ -172,6 +195,7 @@ class MainActivity : AppCompatActivity() {
         override fun onReadyForSpeech(params: Bundle?) {
             // Called when the SpeechRecognizer is ready to start listening
             Log.d("RecognitionListener", "onReadyForSpeech")
+            Utils.showMessage(applicationContext,"Listening...")
 
         }
 
@@ -193,6 +217,8 @@ class MainActivity : AppCompatActivity() {
         override fun onEndOfSpeech() {
             // Called when the user stops speaking
             Log.d("RecognitionListener", "onEndOfSpeech")
+            Utils.showMessage(applicationContext,"Processing...",true)
+
         }
 
         override fun onError(error: Int) {

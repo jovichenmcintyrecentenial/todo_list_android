@@ -67,11 +67,22 @@ class TaskDetailsActivity : AppCompatActivity() {
         binding.isCompleted.isChecked = taskModel!!.isCompleted!!
         binding.hasDueDateSwitch.isChecked = taskModel!!.dueDate != null
         binding.actionButton.text = "Update Task"
+
+        if(taskModel!!.dueDate != null){
+            setCurrentDateAndTime(taskModel!!.dueDate)
+        }
     }
 
-    fun setCurrentDateAndTime(){
 
-        date = Date()
+
+    fun setCurrentDateAndTime(tempDate:Date? = null){
+
+        if(tempDate == null) {
+            date = Date()
+        }
+        else{
+            date = tempDate!!
+        }
 
         val currentDateString = dateFormat.format(date)
         val currentTimeString = timeFormat.format(date)

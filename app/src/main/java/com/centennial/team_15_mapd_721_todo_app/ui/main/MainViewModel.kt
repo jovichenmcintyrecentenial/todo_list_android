@@ -6,16 +6,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.volley.Response
 import com.centennial.team_15_mapd_721_todo_app.api.ApiClient
+import com.centennial.team_15_mapd_721_todo_app.models.SpeechInterpret
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.repository.TaskRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainViewModel : ViewModel() {
 
     val liveTaskListData: MutableLiveData<List<TaskModel>?> by lazy {
         MutableLiveData<List<TaskModel>?>()
+    }
+    val liveSpeechInterpret: MutableLiveData<SpeechInterpret?> by lazy {
+        MutableLiveData<SpeechInterpret?>()
     }
 
     fun getTasks(context: Context){
@@ -32,13 +39,20 @@ class MainViewModel : ViewModel() {
     fun interpretSpeech(context: Context, speech:String){
 
         CoroutineScope(Dispatchers.IO).launch {
-
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val date = Date()
+            val dateString = dateFormat.format(date)
             ApiClient.interpretTaskInfo(
                 context,
                 speech,
-                "2023-04-06",
+                dateString,
                 { response ->
                     Log.d("Interpreted Speech", response)
+                    if(Utils.isJsonValid(response)){
+
+                        val speechInterpret = Gson().fromJson(response.trim(), SpeechInterpret::class.java)
+                        liveSpeechInterpret.postValue(speechInterpret)
+                    }
                 },
                 { error ->
 

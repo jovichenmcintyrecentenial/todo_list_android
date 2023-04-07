@@ -1,6 +1,8 @@
 import android.content.Context
 import android.widget.EditText
 import android.widget.Toast
+import org.json.JSONException
+import org.json.JSONObject
 
 class Utils {
     companion object {
@@ -14,8 +16,18 @@ class Utils {
         }
 
         //use to display toast messages
-        fun showMessage(context:Context,message:String){
-            Toast.makeText(context,message, Toast.LENGTH_SHORT).show()
+        fun showMessage(context: Context, message: String, longToast: Boolean = false) {
+            val duration = if (longToast) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+            Toast.makeText(context, message, duration).show()
+        }
+
+        fun isJsonValid(json: String): Boolean {
+            try {
+                JSONObject(json)
+                return true
+            } catch (ex: JSONException) {
+                return false
+            }
         }
     }
 

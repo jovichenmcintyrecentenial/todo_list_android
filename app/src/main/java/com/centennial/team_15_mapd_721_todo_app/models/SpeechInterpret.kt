@@ -1,8 +1,10 @@
 package com.centennial.team_15_mapd_721_todo_app.models
 
+import com.google.gson.annotations.SerializedName
+
 data class SpeechInterpret (
-    val taskDeriveTitle: String? = null,
-    val taskDetails: String? = null,
-    val taskIsTimeSensitive: Boolean? = null,
-    val dueDateTime: String? = null
+    @SerializedName("task_derive_title") val taskDeriveTitle: String? = null,
+    @SerializedName("task_details") val taskDetails: String? = null,
+    @SerializedName("task_is_time_sensitive") val taskIsTimeSensitive: Boolean? = null,
+    @SerializedName("due_date_time") val dueDateTime: String? = null
 )
