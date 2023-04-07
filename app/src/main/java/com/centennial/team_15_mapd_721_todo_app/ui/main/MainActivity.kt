@@ -14,6 +14,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -36,7 +37,6 @@ import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -47,6 +47,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewAdapter: TaskAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var mainViewModel: MainViewModel? = null
+    private var isFABOpen = false
+
 
     var list:MutableList<TaskModel>? = null
 
@@ -76,11 +78,21 @@ class MainActivity : AppCompatActivity() {
 
         updateTitleDate()
 
-        binding.fab.setOnClickListener { view ->
+        binding.fabOption2.setOnClickListener {
+            startListening()
+        }
+
+        binding.fabOption1.setOnClickListener {
             val intent = Intent(this, TaskDetailsActivity::class.java)
             startActivity(intent)
+        }
 
-//            startListening()
+        binding.fab.setOnClickListener {
+            if (!isFABOpen) {
+                showFABMenu()
+            } else {
+                closeFABMenu()
+            }
         }
 
         AlarmService.initialize(this)
@@ -184,6 +196,26 @@ class MainActivity : AppCompatActivity() {
         filter.addAction(MyConstants.ALARMID2)
         registerReceiver(alarmBroadcastReceiver, filter)
 
+    }
+
+    private fun showFABMenu() {
+        isFABOpen = true
+        binding.fabOption1.visibility = View.VISIBLE
+        binding.fabOption2.visibility = View.VISIBLE
+        binding.fab.animate().rotation(45f)
+        binding.fabOption1.animate().translationY(-resources.getDimension(R.dimen.standard_55))
+        binding.fabOption2.animate().translationY(-resources.getDimension(R.dimen.standard_105))
+    }
+
+    private fun closeFABMenu() {
+        isFABOpen = false
+        binding.fab.animate().rotation(0f)
+        binding.fabOption1.animate().translationY(0f).withEndAction {
+            binding.fabOption1.visibility = View.INVISIBLE
+        }
+        binding.fabOption2.animate().translationY(0f).withEndAction {
+            binding.fabOption2.visibility = View.INVISIBLE
+        }
     }
 
     fun updateTitleDate(){
