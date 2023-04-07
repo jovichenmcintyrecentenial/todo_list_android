@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.android.volley.Response
+import com.centennial.team_15_mapd_721_todo_app.api.ApiClient
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.repository.TaskRepository
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +26,23 @@ class MainViewModel : ViewModel() {
             if(data != null) {
                 liveTaskListData.postValue(data)
             }
+        }
+    }
+
+    fun interpretSpeech(context: Context, speech:String){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            ApiClient.interpretTaskInfo(
+                context,
+                speech,
+                "2023-04-06",
+                { response ->
+                    Log.d("Interpreted Speech", response)
+                },
+                { error ->
+
+                })
         }
     }
 

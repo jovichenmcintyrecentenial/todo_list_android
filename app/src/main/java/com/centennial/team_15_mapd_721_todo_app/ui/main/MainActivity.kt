@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.centennial.team_15_mapd_721_todo_app.R
 import com.centennial.team_15_mapd_721_todo_app.adapters.SwipeToDeleteCallback
 import com.centennial.team_15_mapd_721_todo_app.adapters.TaskAdapter
+import com.centennial.team_15_mapd_721_todo_app.api.ApiClient
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
@@ -60,31 +61,20 @@ class MainActivity : AppCompatActivity() {
         //connect to view model
         mainViewModel = ViewModelProvider(this).get(modelClass = MainViewModel::class.java)
 
-        val calendar = Calendar.getInstance()
-        val dateFormatDate = SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault())
-
-        val dateString = dateFormatDate.format(calendar.time)
-        supportActionBar?.title = dateString
-
-
+        updateTitleDate()
 
         binding.fab.setOnClickListener { view ->
-            val intent = Intent(this, TaskDetailsActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, TaskDetailsActivity::class.java)
+//            startActivity(intent)
 
-//            startListening()
+            startListening()
         }
 
         AlarmService.initialize(this)
 
         viewManager = LinearLayoutManager(this)
-//        viewAdapter = TaskAdapter(emptyList())
         recyclerView = binding.recyclerView
-//        recyclerView.apply {
-//            setHasFixedSize(true)
-//            layoutManager = viewManager
-//            adapter = viewAdapter
-//        }
+
 
         // Initialize the SpeechRecognizer
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
@@ -155,7 +145,15 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel!!.getTasks(this)
+        ApiClient
+    }
 
+    fun updateTitleDate(){
+        val calendar = Calendar.getInstance()
+        val dateFormatDate = SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault())
+
+        val dateString = dateFormatDate.format(calendar.time)
+        supportActionBar?.title = dateString
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -209,7 +207,7 @@ class MainActivity : AppCompatActivity() {
                 matches?.let { resultList ->
                     // Process the recognition results, e.g., display them in a TextView or perform a search
                     val recognizedText = resultList[0] // Get the most likely result
-                    // Do something with the recognizedText
+                    mainViewModel!!.interpretSpeech(applicationContext,recognizedText)
                 }
             }
         }

@@ -42,8 +42,6 @@ class TaskDetailsActivity : AppCompatActivity() {
             }
         }
 
-
-
         taskViewModel = ViewModelProvider(this).get(modelClass = TaskViewModel::class.java)
 
         val loginObserver = Observer<Boolean?> { boolean ->
