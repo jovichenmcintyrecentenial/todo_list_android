@@ -13,10 +13,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
-import com.centennial.team_15_mapd_721_todo_app.service.MyAlarmReceiver
 import com.google.gson.Gson
 
 class TaskDetailsActivity : AppCompatActivity() {

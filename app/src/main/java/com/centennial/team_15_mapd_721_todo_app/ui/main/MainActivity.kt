@@ -1,7 +1,10 @@
 package com.centennial.team_15_mapd_721_todo_app.ui.main
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.speech.RecognitionListener
@@ -23,6 +26,7 @@ import com.centennial.team_15_mapd_721_todo_app.adapters.SwipeToDeleteCallback
 import com.centennial.team_15_mapd_721_todo_app.adapters.TaskAdapter
 import com.centennial.team_15_mapd_721_todo_app.api.ApiClient
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
+import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
 import com.centennial.team_15_mapd_721_todo_app.models.SpeechInterpret
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.models.UserModel
@@ -46,6 +50,12 @@ class MainActivity : AppCompatActivity() {
 
     var list:MutableList<TaskModel>? = null
 
+    private val alarmBroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            viewAdapter.notifyDataSetChanged()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         if(mainViewModel!=null){
@@ -67,10 +77,10 @@ class MainActivity : AppCompatActivity() {
         updateTitleDate()
 
         binding.fab.setOnClickListener { view ->
-//            val intent = Intent(this, TaskDetailsActivity::class.java)
-//            startActivity(intent)
+            val intent = Intent(this, TaskDetailsActivity::class.java)
+            startActivity(intent)
 
-            startListening()
+//            startListening()
         }
 
         AlarmService.initialize(this)
@@ -168,7 +178,12 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel!!.getTasks(this)
-        ApiClient
+
+
+        val filter = IntentFilter()
+        filter.addAction(MyConstants.ALARMID2)
+        registerReceiver(alarmBroadcastReceiver, filter)
+
     }
 
     fun updateTitleDate(){
@@ -252,6 +267,8 @@ class MainActivity : AppCompatActivity() {
         if (::speechRecognizer.isInitialized) {
             speechRecognizer.destroy()
         }
+        unregisterReceiver(alarmBroadcastReceiver)
+
         super.onDestroy()
     }
 
@@ -287,5 +304,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
 }

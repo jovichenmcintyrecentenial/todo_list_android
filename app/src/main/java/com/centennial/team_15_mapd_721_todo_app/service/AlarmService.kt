@@ -16,6 +16,11 @@ class MyAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val task = Gson().fromJson(intent.getStringExtra("task"),TaskModel::class.java)
         AlarmService.notifications!!.showNotification("Due Task: "+task.name!!,task.note!!,null)
+        // Cancel alarm because pending intent is not automatically removed
+        AlarmService.cancelAlarm(context,task)
+
+        context.sendBroadcast(Intent(MyConstants.ALARMID2))
+
     }
 }
 
@@ -29,12 +34,13 @@ class AlarmService {
         }
 
         fun setAlarm(context: Context, taskModel: TaskModel) {
+                cancelAlarm(context,taskModel)
                 val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val alarmIntent = Intent(context, MyAlarmReceiver::class.java).apply {
                     action = MyConstants.ALARMID
                     putExtra("task", Gson().toJson(taskModel)) // Pass the extra data
                 }
-                val pendingIntent = PendingIntent.getBroadcast(context, taskModel.hashCode(), alarmIntent, PendingIntent.FLAG_IMMUTABLE)
+                val pendingIntent = PendingIntent.getBroadcast(context, taskModel.id.hashCode(), alarmIntent, PendingIntent.FLAG_IMMUTABLE)
 
                 // Set the alarm
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -45,17 +51,26 @@ class AlarmService {
         }
 
 
-        fun cancelAlarm(context: Context, requestCode: Int, intent: Intent) {
-
+        fun cancelAlarm(context: Context, taskModel: TaskModel) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
             val alarmIntent = Intent(context, MyAlarmReceiver::class.java).apply {
                 action = MyConstants.ALARMID
+                putExtra("task", Gson().toJson(taskModel)) // Pass the extra data
             }
 
-            val pendingIntent = PendingIntent.getBroadcast(context, requestCode, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
-            alarmManager.cancel(pendingIntent)
-            pendingIntent.cancel()
+            // Retrieve the PendingIntent with the same requestCode (taskModel.hashCode()) and FLAG_IMMUTABLE
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                taskModel.id.hashCode(),
+                alarmIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
+            )
+
+            // Cancel the alarm if the PendingIntent exists
+            if (pendingIntent != null) {
+                alarmManager.cancel(pendingIntent)
+                pendingIntent.cancel()
+            }
         }
 
     }

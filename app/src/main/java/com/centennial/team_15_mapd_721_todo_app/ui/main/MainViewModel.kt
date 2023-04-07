@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.android.volley.Response
 import com.centennial.team_15_mapd_721_todo_app.api.ApiClient
 import com.centennial.team_15_mapd_721_todo_app.models.SpeechInterpret
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
@@ -74,9 +73,9 @@ class MainViewModel : ViewModel() {
         }
     }
     fun makeAsCompleted(context:Context, taskModel:TaskModel){
+        taskModel.isCompleted = !taskModel.isCompleted!!
 
         CoroutineScope(Dispatchers.IO).launch {
-            taskModel.isCompleted = !taskModel.isCompleted!!
             TaskRepository.insertUpdateData(context,taskModel)
 
         }
