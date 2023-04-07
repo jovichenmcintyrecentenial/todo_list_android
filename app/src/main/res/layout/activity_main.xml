@@ -22,25 +22,26 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <ImageView
-            android:layout_marginTop="?attr/actionBarSize"
 
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_gravity="top"
             android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginTop="?attr/actionBarSize"
             android:scaleType="centerCrop"
             android:src="@drawable/home_imaeg" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
     </LinearLayout>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,40 +51,23 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="16dp"
-            app:srcCompat="@android:drawable/ic_input_add"
+            style="@style/fab_style"
             app:fabSize="normal"
 
-            />
+            app:srcCompat="@android:drawable/ic_input_add" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_option1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="16dp"
-            app:srcCompat="@android:drawable/ic_input_add"
+            style="@style/mini_fab_style"
             app:fabSize="mini"
-            android:visibility="invisible"
 
-            />
+            app:srcCompat="@android:drawable/ic_input_add" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_option2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="16dp"
-            app:srcCompat="@android:drawable/ic_btn_speak_now"
-            android:visibility="invisible"
+            style="@style/mini_fab_style"
             app:fabSize="mini"
-            />
+            app:srcCompat="@android:drawable/ic_btn_speak_now" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>
