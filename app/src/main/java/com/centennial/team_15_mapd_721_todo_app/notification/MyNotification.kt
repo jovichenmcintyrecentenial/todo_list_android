@@ -9,6 +9,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import com.centennial.team_15_mapd_721_todo_app.R
+import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
+import com.centennial.team_15_mapd_721_todo_app.service.MyAlarmReceiver
 import com.centennial.team_15_mapd_721_todo_app.ui.main.MainActivity
 
 class MyNotification(private val context: Context) {
@@ -24,12 +26,30 @@ class MyNotification(private val context: Context) {
         NOTIFICATION_ID++
 
         val intent = Intent(context, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_MUTABLE
-        )
+        intent.action = MyConstants.NOTIFICATIONCLICKEDACTION
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_MUTABLE
+            )
+        } else {
+            PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                0
+            )
+        }
+
+        val deleteIntent = Intent(context, MyAlarmReceiver::class.java)
+        deleteIntent.action = MyConstants.STOPALARMACTION
+        val deletePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_MUTABLE)
+        } else {
+            PendingIntent.getBroadcast(context, 0, deleteIntent, 0)
+        }
 
         var notificationManager:NotificationManager? = null
 
@@ -53,7 +73,10 @@ class MyNotification(private val context: Context) {
             .setContentText(message)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+            .setDeleteIntent(deletePendingIntent)
             .setPriority(Notification.PRIORITY_DEFAULT)
+
+
 
         notificationManager = notificationManager ?: context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())

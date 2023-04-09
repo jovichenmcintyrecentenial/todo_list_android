@@ -17,7 +17,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,12 +24,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.centennial.team_15_mapd_721_todo_app.R
 import com.centennial.team_15_mapd_721_todo_app.adapters.SwipeToDeleteCallback
 import com.centennial.team_15_mapd_721_todo_app.adapters.TaskAdapter
-import com.centennial.team_15_mapd_721_todo_app.api.ApiClient
 import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
 import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
-import com.centennial.team_15_mapd_721_todo_app.models.SpeechInterpret
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
-import com.centennial.team_15_mapd_721_todo_app.models.UserModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
 import com.centennial.team_15_mapd_721_todo_app.ui.task_details.TaskDetailsActivity
 import com.google.gson.Gson
@@ -80,11 +76,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.fabOption2.setOnClickListener {
             startListening()
+            closeFABMenu()
+
         }
 
         binding.fabOption1.setOnClickListener {
             val intent = Intent(this, TaskDetailsActivity::class.java)
             startActivity(intent)
+            closeFABMenu()
+
         }
 
         binding.fab.setOnClickListener {
@@ -193,7 +193,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val filter = IntentFilter()
-        filter.addAction(MyConstants.ALARMID2)
+        filter.addAction(MyConstants.ALARMTRIGGERIDACTION2)
         registerReceiver(alarmBroadcastReceiver, filter)
 
     }

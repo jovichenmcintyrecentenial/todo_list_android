@@ -59,6 +59,12 @@
             <intent-filter>
                 <action android:name="com.centennial.team_15_mapd_721_todo_app.ALARM_TRIGGERED" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.centennial.team_15_mapd_721_todo_app.STOP_ALARM" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.centennial.team_15_mapd_721_todo_app.NOTIFICATION_CLICKED"/>
+            </intent-filter>
         </receiver>
     </application>
 
