@@ -3,7 +3,8 @@ package com.centennial.team_15_mapd_721_todo_app.ui.task_details
 import UserInputException
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.IntentFilter
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,6 +14,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
+import com.centennial.team_15_mapd_721_todo_app.models.MyConstants.Companion.SAVEDDATA
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
 import com.google.gson.Gson
@@ -24,6 +27,9 @@ class TaskDetailsActivity : AppCompatActivity() {
     private val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
     private lateinit var taskViewModel: TaskViewModel
     private var taskModel: TaskModel? = null
+    private val gson:Gson = Gson()
+    private var shouldSave:Boolean = true
+    private lateinit var sharedPreferences:SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,18 +48,29 @@ class TaskDetailsActivity : AppCompatActivity() {
 
         taskViewModel = ViewModelProvider(this).get(modelClass = TaskViewModel::class.java)
 
-        val loginObserver = Observer<Boolean?> { boolean ->
+        val addTaskObserver = Observer<Boolean?> { boolean ->
             if (boolean == true) {
+                sharedPreferences.edit().remove(SAVEDDATA).apply()
+                shouldSave = false
                 finish()
+
             } else {
                 Utils.showMessage(this,"Unable to add task")
             }
         }
+        sharedPreferences = getSharedPreferences(MyConstants.SHAREDPREFENCENAME ,Context.MODE_PRIVATE)
 
-        taskViewModel.liveDataTaskCompleted.observe(this, loginObserver)
+        taskViewModel.liveDataTaskCompleted.observe(this, addTaskObserver)
 
         if(intent.hasExtra("task")){
+            shouldSave = false
             taskModel = Gson().fromJson(intent.getStringExtra("task"),TaskModel::class.java)
+        }
+        else if(sharedPreferences.contains(SAVEDDATA)){
+            val taskJson = sharedPreferences.getString(SAVEDDATA, null)
+            if(taskJson != null) {
+                taskModel = Gson().fromJson(taskJson, TaskModel::class.java)
+            }
         }
         updateData()
     }
@@ -64,7 +81,8 @@ class TaskDetailsActivity : AppCompatActivity() {
         binding.editTaskDetails.setText(taskModel!!.note)
         binding.isCompleted.isChecked = taskModel!!.isCompleted!!
         binding.hasDueDateSwitch.isChecked = taskModel!!.dueDate != null
-        binding.actionButton.text = "Update Task"
+        if(!shouldSave)
+            binding.actionButton.text = "Update Task"
 
         if(taskModel!!.dueDate != null){
             setCurrentDateAndTime(taskModel!!.dueDate)
@@ -195,5 +213,17 @@ class TaskDetailsActivity : AppCompatActivity() {
             }
         }
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(!shouldSave) return
+        val task = TaskModel(
+            binding.editTaskName.text.toString(),
+            binding.editTaskDetails.text.toString(),
+            if (binding.hasDueDateSwitch.isChecked) date else null,
+            binding.isCompleted.isChecked
+        )
+        sharedPreferences.edit().putString(SAVEDDATA,  gson.toJson(task)).apply()
     }
 }

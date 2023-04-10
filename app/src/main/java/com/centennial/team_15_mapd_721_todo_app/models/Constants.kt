@@ -3,6 +3,8 @@ package com.centennial.team_15_mapd_721_todo_app.models
 class MyConstants {
 
     companion object {
+        val SHAREDPREFENCENAME = "my_shared_pref"
+        val SAVEDDATA = "save_data"
         const val ALARMTRIGGERACTION = "com.centennial.team_15_mapd_721_todo_app.ALARM_TRIGGERED"
         val ALARMTRIGGERIDACTION2 = "com.centennial.team_15_mapd_721_todo_app.ALARM_TRIGGERED2"
         val STOPALARMACTION = "com.centennial.team_15_mapd_721_todo_app.STOP_ALARM"
