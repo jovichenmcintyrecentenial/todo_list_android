@@ -62,20 +62,22 @@ class TaskDetailsActivity : AppCompatActivity() {
 
         taskViewModel.liveDataTaskCompleted.observe(this, addTaskObserver)
 
+        // Check if the intent contains a task extra
         if(intent.hasExtra("task")){
             shouldSave = false
             taskModel = Gson().fromJson(intent.getStringExtra("task"),TaskModel::class.java)
         }
+        // If the intent doesn't contain a task extra, check if there is saved data in SharedPreferences
         else if(sharedPreferences.contains(SAVEDDATA)){
             val taskJson = sharedPreferences.getString(SAVEDDATA, null)
             if(taskJson != null) {
                 taskModel = Gson().fromJson(taskJson, TaskModel::class.java)
             }
         }
-        updateData()
+        populateUIWithData()
     }
 
-    fun updateData(){
+    private fun populateUIWithData(){
         if(taskModel == null) return
         binding.editTaskName.setText(taskModel!!.name)
         binding.editTaskDetails.setText(taskModel!!.note)
@@ -91,7 +93,7 @@ class TaskDetailsActivity : AppCompatActivity() {
 
 
 
-    fun setCurrentDateAndTime(tempDate:Date? = null){
+    private fun setCurrentDateAndTime(tempDate:Date? = null){
 
         if(tempDate == null) {
             date = Date()
@@ -203,7 +205,6 @@ class TaskDetailsActivity : AppCompatActivity() {
 
     private fun isDataValid(): Boolean {
         Utils.emptyValidation(binding.editTaskName, "Please enter a task name")
-//        Utils.emptyValidation(binding.editTaskDetails, "Please enter a task details")
 
         val currentDate = Calendar.getInstance().time
 
