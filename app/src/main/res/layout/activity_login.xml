@@ -34,14 +34,14 @@
 
             <EditText
                 android:id="@+id/editTextEmail"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:text="jovi.mcintyre@gmail.com"
                 android:layout_marginBottom="10dp"
                 style="@style/text_field_style" />
 
             <EditText
                 android:id="@+id/editTextPassword"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:text="1234"
                 android:layout_marginBottom="5dp"
                 style="@style/text_field_style"
@@ -50,7 +50,7 @@
             <Button
                 android:id="@+id/buttonLogin"
                 android:layout_marginBottom="20dp"
-                android:text="Login"
+                android:text="@string/login"
                 android:onClick="onLogin"
                 style="@style/main_button_style" />
             <TextView
@@ -58,7 +58,7 @@
                 android:id="@+id/textViewCreateAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No account? Create One"
+                android:text="@string/no_account_create_one"
                 android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:clickable="true"

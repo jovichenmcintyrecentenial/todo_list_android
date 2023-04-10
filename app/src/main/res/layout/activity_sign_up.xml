@@ -24,28 +24,28 @@
 
         <EditText
             android:id="@+id/editTextFirstName"
-            android:hint="First Name"
+            android:hint="@string/first_name"
             style="@style/text_field_style" />
 
         <EditText
             android:id="@+id/editTextLastName"
-            android:hint="Last Name"
+            android:hint="@string/last_name"
             style="@style/text_field_style" />
 
 
         <EditText
             android:id="@+id/editTextEmail"
-            android:hint="Email"
+            android:hint="@string/email"
             style="@style/text_field_style" />
 
         <EditText
             android:id="@+id/editTextPassword"
-            android:hint="Password"
+            android:hint="@string/password"
             style="@style/text_field_style"
             android:inputType="textPassword" />
         <EditText
             android:id="@+id/editRePassword"
-            android:hint="Password"
+            android:hint="@string/password"
             style="@style/text_field_style"
             android:inputType="textPassword" />
 
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:onClick="onSubmit"
             style="@style/main_button_style" />
 
