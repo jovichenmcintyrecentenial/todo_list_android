@@ -28,6 +28,7 @@ import com.centennial.team_15_mapd_721_todo_app.databinding.ActivityMainBinding
 import com.centennial.team_15_mapd_721_todo_app.models.MyConstants
 import com.centennial.team_15_mapd_721_todo_app.models.TaskModel
 import com.centennial.team_15_mapd_721_todo_app.service.AlarmService
+import com.centennial.team_15_mapd_721_todo_app.ui.login.LoginActivity
 import com.centennial.team_15_mapd_721_todo_app.ui.task_details.TaskDetailsActivity
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
@@ -243,8 +244,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+            R.id.action_logout -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+                true
+            }
+            else -> true
         }
     }
 
