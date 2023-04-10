@@ -17,4 +17,6 @@
     <string name="no_account_create_one">No account? Create One</string>
     <string name="login">Login</string>
     <string name="no_date">No Date</string>
+    <string name="no_created_task">No Created task</string>
+    <string name="get_started_by_tapping_the_plus_button_nat_the_bottom">Get started by tapping the plus button\nat the bottom</string>
 </resources>

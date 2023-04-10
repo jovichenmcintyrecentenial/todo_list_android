@@ -115,6 +115,12 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel?.liveTaskListData?.observe(this, androidx.lifecycle.Observer { listOfTask ->
             if (listOfTask != null) {
+                if(listOfTask.isNotEmpty()){
+                    binding.emptyListView.visibility = View.GONE
+                }
+                else{
+                    binding.emptyListView.visibility = View.VISIBLE
+                }
                 if (list == null) {
                     list = mutableListOf()
                     viewAdapter = TaskAdapter(list!!){ task ->
@@ -133,6 +139,10 @@ class MainActivity : AppCompatActivity() {
                                     // Handle swipe to left
                                     mainViewModel!!.deleteTask( list!![viewHolder.adapterPosition])
                                     viewAdapter.deleteItem(viewHolder.adapterPosition)
+                                    if(viewAdapter.itemCount == 0){
+
+                                        binding.emptyListView.visibility = View.VISIBLE
+                                    }
                                 }
                                 ItemTouchHelper.RIGHT -> {
                                     // Handle swipe to right
@@ -304,7 +314,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    fun startListening() {
+    private fun startListening() {
         requestMicrophonePermission()
 
         speechRecognizer.startListening(speechRecognizerIntent)
