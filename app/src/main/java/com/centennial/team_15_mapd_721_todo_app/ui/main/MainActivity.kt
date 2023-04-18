@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        AlarmService.stopSound()
         if(mainViewModel!=null){
            mainViewModel!!.getTasks(this)
         }
